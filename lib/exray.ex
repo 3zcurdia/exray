@@ -17,6 +17,7 @@ defmodule Exray do
   defp render_pixels(%PPM{width: width, height: height} = ppm) do
     pixels =
       for j <- 0..(height - 1), i <- 0..(width - 1), into: [] do
+        IO.write(:stderr, "\rScanlines remaining: #{height - j} ")
         "#{Color.new(i / (width - 1), j / (height - 1), 0.0)}\n"
       end
 
