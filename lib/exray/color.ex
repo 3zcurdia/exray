@@ -4,6 +4,7 @@ defmodule Exray.Color do
   """
 
   defstruct [:r, :g, :b]
+  @type t :: %__MODULE__{r: number, g: number, b: number}
 
   def new(r, g, b), do: %Exray.Color{r: r, g: g, b: b}
 

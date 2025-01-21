@@ -4,6 +4,7 @@ defmodule Exray.PPM do
   """
 
   defstruct [:width, :height, :pixels]
+  @type t :: %__MODULE__{width: number, height: number, pixels: list(Exray.Color.t())}
 
   @doc """
   It buils a ppm structure
@@ -24,6 +25,6 @@ end
 
 defimpl String.Chars, for: Exray.PPM do
   def to_string(%{width: width, height: height, pixels: pixels}) do
-    ["P3\n", "#{width} #{height}\n", "255\n" | pixels]
+    ["P3\n", "#{width} #{height}\n", "255\n" | pixels] |> Enum.join()
   end
 end
