@@ -3,10 +3,12 @@ defmodule Exray do
   Documentation for `Exray`.
   """
 
+  alias Supervisor.Spec
   alias Exray.PPM
   alias Exray.Color
   alias Exray.Vector
   alias Exray.Ray
+  alias Exray.Sphere
 
   def render(width \\ 256, height \\ 256) do
     ppm = PPM.new(width, height)
@@ -67,13 +69,17 @@ defmodule Exray do
   end
 
   def ray_color(ray) do
-    %{y: y} = Ray.unit_vector(ray)
-    a = 0.5 * (y + 1.0)
+    if Sphere.hit?(Sphere.new({0.0, 0.0, -1.0}, 0.5), ray) do
+      Vector.new(1, 0, 0) |> Color.new()
+    else
+      %{y: y} = Ray.unit_vector(ray)
+      a = 0.5 * (y + 1.0)
 
-    Vector.new(1.0, 1.0, 1.0)
-    |> Vector.multiply(1.0 - a)
-    |> Vector.add(Vector.multiply(Vector.new(0.5, 0.7, 1.0), a))
-    |> Color.new()
+      Vector.new(1.0, 1.0, 1.0)
+      |> Vector.multiply(1.0 - a)
+      |> Vector.add(Vector.multiply(Vector.new(0.5, 0.7, 1.0), a))
+      |> Color.new()
+    end
   end
 
   # Experimental, concurrent rendering
