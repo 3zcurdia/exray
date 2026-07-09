@@ -13,14 +13,13 @@ defmodule Exray.Materials.Lambertian do
 end
 
 defimpl Exray.Material, for: Exray.Materials.Lambertian do
-  alias Exray.{Ray, Vector}
+  alias Exray.Materials.Lambertian
+  alias Exray.Ray
+  alias Exray.Vector
 
-  @spec scatter(Exray.Materials.Lambertian.t(), Ray.t(), Exray.HitRecord.t()) ::
+  @spec scatter(Lambertian.t(), Ray.t(), Exray.HitRecord.t()) ::
           {:ok, Ray.t(), Exray.Color.t()} | :absorbed
-  def scatter(%Exray.Materials.Lambertian{albedo: albedo}, _ray_in, %Exray.HitRecord{
-        point: point,
-        normal: normal
-      }) do
+  def scatter(%Lambertian{albedo: albedo}, _ray_in, %Exray.HitRecord{point: point, normal: normal}) do
     scatter_direction = Vector.add(normal, Vector.random_unit_vector())
 
     scatter_direction =

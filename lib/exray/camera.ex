@@ -8,7 +8,9 @@ defmodule Exray.Camera do
     radius `aperture / 2` at the focus plane (`focus_dist`).
   """
 
-  alias Exray.{Vector, Ray, Utils}
+  alias Exray.Ray
+  alias Exray.Utils
+  alias Exray.Vector
 
   defstruct [
     :origin,
@@ -23,13 +25,13 @@ defmodule Exray.Camera do
   ]
 
   @type t :: %__MODULE__{
-          origin: Exray.Vector.t(),
-          lower_left: Exray.Vector.t(),
-          horizontal: Exray.Vector.t(),
-          vertical: Exray.Vector.t(),
-          u: Exray.Vector.t(),
-          v: Exray.Vector.t(),
-          w: Exray.Vector.t(),
+          origin: Vector.t(),
+          lower_left: Vector.t(),
+          horizontal: Vector.t(),
+          vertical: Vector.t(),
+          u: Vector.t(),
+          v: Vector.t(),
+          w: Vector.t(),
           aspect_ratio: number(),
           lens_radius: number()
         }
@@ -42,7 +44,7 @@ defmodule Exray.Camera do
     focus_dist: 1.0
   ]
 
-  @spec new(Exray.Vector.t(), Exray.Vector.t(), keyword()) :: t()
+  @spec new(Vector.t(), Vector.t(), keyword()) :: t()
   def new(look_from, look_at, opts \\ []) do
     opts = Keyword.merge(@default_options, opts)
 
@@ -95,7 +97,7 @@ defmodule Exray.Camera do
     Generate a primary ray for raster coordinate `(s, t)` in `[0, 1]`.
     When defocus blur is on, the ray origin is shifted within the lens disk.
   """
-  @spec get_ray(t(), number(), number()) :: Exray.Ray.t()
+  @spec get_ray(t(), number(), number()) :: Ray.t()
   def get_ray(%__MODULE__{} = cam, s, t) do
     offset = lens_offset(cam)
 

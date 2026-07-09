@@ -6,7 +6,8 @@ defprotocol Exray.Hittable do
     within `[t_min, t_max]`, or `:miss` when no intersection exists.
   """
 
-  alias Exray.{Ray, HitRecord}
+  alias Exray.HitRecord
+  alias Exray.Ray
 
   @spec hit(t(), Ray.t(), number(), number()) :: {:ok, HitRecord.t()} | :miss
   def hit(hittable, ray, t_min, t_max)

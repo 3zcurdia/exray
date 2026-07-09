@@ -8,7 +8,9 @@ defprotocol Exray.Material do
     ray path.
   """
 
-  alias Exray.{Ray, HitRecord, Color}
+  alias Exray.Color
+  alias Exray.HitRecord
+  alias Exray.Ray
 
   @spec scatter(t(), Ray.t(), HitRecord.t()) ::
           {:ok, Ray.t(), Color.t()} | :absorbed

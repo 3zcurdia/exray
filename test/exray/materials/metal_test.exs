@@ -1,10 +1,14 @@
 defmodule Exray.Materials.MetalTest do
   use ExUnit.Case, async: true
 
+  alias Exray.Color
+  alias Exray.HitRecord
+  alias Exray.Material
   alias Exray.Materials.Metal
-  alias Exray.{Color, Ray, Vector, HitRecord, Material}
+  alias Exray.Ray
+  alias Exray.Vector
 
-  doctest Exray.Materials.Metal
+  doctest Metal
 
   describe "new/2" do
     test "defaults fuzz to 0.0" do

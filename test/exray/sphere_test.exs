@@ -1,9 +1,15 @@
 defmodule Exray.SphereTest do
   use ExUnit.Case, async: true
 
-  alias Exray.{Sphere, Vector, Ray, Hittable, HitRecord, Materials.Lambertian, Color}
+  alias Exray.Color
+  alias Exray.HitRecord
+  alias Exray.Hittable
+  alias Exray.Materials.Lambertian
+  alias Exray.Ray
+  alias Exray.Sphere
+  alias Exray.Vector
 
-  doctest Exray.Sphere
+  doctest Sphere
 
   describe "new/2 and new/3" do
     test "builds a sphere from a vector center" do

@@ -47,11 +47,9 @@ defmodule Exray.Color do
         %Exray.Color{r: 1.0, g: 0.0, b: 0.0}
   """
   @spec multiply(t(), number() | t()) :: t()
-  def multiply(a, b) when is_number(b),
-    do: %__MODULE__{r: a.r * b, g: a.g * b, b: a.b * b}
+  def multiply(a, b) when is_number(b), do: %__MODULE__{r: a.r * b, g: a.g * b, b: a.b * b}
 
-  def multiply(a, %__MODULE__{r: r, g: g, b: b}),
-    do: %__MODULE__{r: a.r * r, g: a.g * g, b: a.b * b}
+  def multiply(a, %__MODULE__{r: r, g: g, b: b}), do: %__MODULE__{r: a.r * r, g: a.g * g, b: a.b * b}
 
   @doc """
     Random color with components in `[0.0, 1.0)`.

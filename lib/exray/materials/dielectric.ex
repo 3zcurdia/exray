@@ -14,15 +14,20 @@ defmodule Exray.Materials.Dielectric do
 end
 
 defimpl Exray.Material, for: Exray.Materials.Dielectric do
-  alias Exray.{Ray, Vector, HitRecord, Color, Material.Helpers}
+  alias Exray.Color
+  alias Exray.HitRecord
+  alias Exray.Material.Helpers
+  alias Exray.Materials.Dielectric
+  alias Exray.Ray
+  alias Exray.Vector
 
-  @spec scatter(Exray.Materials.Dielectric.t(), Ray.t(), HitRecord.t()) ::
+  @spec scatter(Dielectric.t(), Ray.t(), HitRecord.t()) ::
           {:ok, Ray.t(), Color.t()} | :absorbed
-  def scatter(
-        %Exray.Materials.Dielectric{index_of_refraction: ior},
-        ray_in,
-        %HitRecord{point: point, normal: normal, front_face: front_face}
-      ) do
+  def scatter(%Dielectric{index_of_refraction: ior}, ray_in, %HitRecord{
+        point: point,
+        normal: normal,
+        front_face: front_face
+      }) do
     refraction_ratio = if(front_face, do: 1.0 / ior, else: ior)
 
     unit_direction = Ray.unit_vector(ray_in)

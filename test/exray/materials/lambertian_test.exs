@@ -1,10 +1,14 @@
 defmodule Exray.Materials.LambertianTest do
   use ExUnit.Case, async: true
 
+  alias Exray.Color
+  alias Exray.HitRecord
+  alias Exray.Material
   alias Exray.Materials.Lambertian
-  alias Exray.{Color, Ray, Vector, HitRecord, Material}
+  alias Exray.Ray
+  alias Exray.Vector
 
-  doctest Exray.Materials.Lambertian
+  doctest Lambertian
 
   describe "new/1" do
     test "defaults to a black albedo" do

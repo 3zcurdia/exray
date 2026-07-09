@@ -1,9 +1,10 @@
 defmodule Exray.ColorTest do
   use ExUnit.Case, async: true
 
-  alias Exray.{Color, Vector}
+  alias Exray.Color
+  alias Exray.Vector
 
-  doctest Exray.Color
+  doctest Color
 
   describe "new/3 and new/1" do
     test "builds a color from three components" do

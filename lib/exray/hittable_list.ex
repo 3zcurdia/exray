@@ -15,15 +15,15 @@ defmodule Exray.HittableList do
   def new(objects \\ []), do: %__MODULE__{objects: objects}
 
   @spec add(t(), Exray.Hittable.t()) :: t()
-  def add(%__MODULE__{objects: objects} = list, object),
-    do: %{list | objects: objects ++ [object]}
+  def add(%__MODULE__{objects: objects} = list, object), do: %{list | objects: objects ++ [object]}
 
   @spec clear(t()) :: t()
   def clear(list), do: %{list | objects: []}
 end
 
 defimpl Exray.Hittable, for: Exray.HittableList do
-  alias Exray.{Hittable, HitRecord}
+  alias Exray.HitRecord
+  alias Exray.Hittable
 
   @spec hit(Exray.HittableList.t(), Exray.Ray.t(), number(), number()) ::
           {:ok, HitRecord.t()} | :miss

@@ -1,9 +1,10 @@
 defmodule Exray.RayTest do
   use ExUnit.Case, async: true
 
-  alias Exray.{Ray, Vector}
+  alias Exray.Ray
+  alias Exray.Vector
 
-  doctest Exray.Ray
+  doctest Ray
 
   describe "new/2" do
     test "builds a ray with origin and direction" do

@@ -7,13 +7,14 @@ defmodule Exray.HitRecord do
     material at the hit point.
   """
 
+  alias Exray.Ray
+  alias Exray.Vector
+
   defstruct [:point, :normal, :t, :material, front_face: false]
 
-  alias Exray.{Vector, Ray}
-
   @type t :: %__MODULE__{
-          point: Exray.Vector.t() | nil,
-          normal: Exray.Vector.t() | nil,
+          point: Vector.t() | nil,
+          normal: Vector.t() | nil,
           t: number() | nil,
           material: term() | nil,
           front_face: boolean()

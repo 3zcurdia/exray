@@ -1,7 +1,12 @@
 defmodule Exray.HittableListTest do
   use ExUnit.Case, async: true
 
-  alias Exray.{Hittable, HittableList, Sphere, Vector, Ray, HitRecord}
+  alias Exray.HitRecord
+  alias Exray.Hittable
+  alias Exray.HittableList
+  alias Exray.Ray
+  alias Exray.Sphere
+  alias Exray.Vector
 
   describe "new/1" do
     test "builds an empty list by default" do
@@ -30,7 +35,8 @@ defmodule Exray.HittableListTest do
       b = Sphere.new(Vector.new(2, 0, 0), 1.0)
 
       updated =
-        HittableList.new([a])
+        [a]
+        |> HittableList.new()
         |> HittableList.add(b)
 
       assert updated.objects == [a, b]

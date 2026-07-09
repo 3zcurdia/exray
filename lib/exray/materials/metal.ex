@@ -10,19 +10,19 @@ defmodule Exray.Materials.Metal do
   @type t :: %__MODULE__{albedo: Exray.Color.t(), fuzz: number()}
 
   @spec new(Exray.Color.t(), number()) :: t()
-  def new(albedo, fuzz \\ 0.0),
-    do: %__MODULE__{albedo: albedo, fuzz: Exray.Utils.clamp(fuzz, 0.0, 1.0)}
+  def new(albedo, fuzz \\ 0.0), do: %__MODULE__{albedo: albedo, fuzz: Exray.Utils.clamp(fuzz, 0.0, 1.0)}
 end
 
 defimpl Exray.Material, for: Exray.Materials.Metal do
-  alias Exray.{Ray, Vector, HitRecord, Material.Helpers}
+  alias Exray.HitRecord
+  alias Exray.Material.Helpers
+  alias Exray.Materials.Metal
+  alias Exray.Ray
+  alias Exray.Vector
 
-  @spec scatter(Exray.Materials.Metal.t(), Ray.t(), HitRecord.t()) ::
+  @spec scatter(Metal.t(), Ray.t(), HitRecord.t()) ::
           {:ok, Ray.t(), Exray.Color.t()} | :absorbed
-  def scatter(%Exray.Materials.Metal{albedo: albedo, fuzz: fuzz}, ray_in, %HitRecord{
-        point: point,
-        normal: normal
-      }) do
+  def scatter(%Metal{albedo: albedo, fuzz: fuzz}, ray_in, %HitRecord{point: point, normal: normal}) do
     reflected = Helpers.reflect(Ray.unit_vector(ray_in), normal)
 
     scattered =

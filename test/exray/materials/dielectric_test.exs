@@ -3,7 +3,7 @@ defmodule Exray.Materials.DielectricTest do
 
   alias Exray.Materials.Dielectric
 
-  doctest Exray.Materials.Dielectric
+  doctest Dielectric
 
   describe "new/1" do
     test "defaults the index of refraction to 1.5" do

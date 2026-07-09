@@ -1,7 +1,10 @@
 defmodule Exray.HitRecordTest do
   use ExUnit.Case, async: true
 
-  alias Exray.{HitRecord, Ray, Vector, Materials.Lambertian}
+  alias Exray.HitRecord
+  alias Exray.Materials.Lambertian
+  alias Exray.Ray
+  alias Exray.Vector
 
   describe "new/1" do
     test "builds a record with the given fields" do

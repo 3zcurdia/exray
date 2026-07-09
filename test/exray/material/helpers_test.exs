@@ -1,7 +1,8 @@
 defmodule Exray.Material.HelpersTest do
   use ExUnit.Case, async: true
 
-  alias Exray.{Material.Helpers, Vector}
+  alias Exray.Material.Helpers
+  alias Exray.Vector
 
   describe "reflect/2" do
     test "reflects a vector across a unit normal" do

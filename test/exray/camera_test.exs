@@ -1,9 +1,11 @@
 defmodule Exray.CameraTest do
   use ExUnit.Case, async: true
 
-  alias Exray.{Camera, Vector, Ray}
+  alias Exray.Camera
+  alias Exray.Ray
+  alias Exray.Vector
 
-  doctest Exray.Camera
+  doctest Camera
 
   describe "new/3" do
     test "builds a camera from a default look_from/look_at pair" do
