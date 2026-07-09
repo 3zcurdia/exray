@@ -46,17 +46,23 @@ defimpl Exray.Hittable, for: Exray.Sphere do
       :miss
     else
       sqrt_d = :math.sqrt(discriminant)
-      root = (-half_b - sqrt_d) / a
+      near_root = (-half_b - sqrt_d) / a
+      far_root = (-half_b + sqrt_d) / a
 
-      if ray_in_bounds?(root, t_min, t_max) do
-        build_record(root, ray, center, radius, material)
-      else
-        root = (-half_b + sqrt_d) / a
+      nearest_hit(near_root, far_root, ray, center, radius, material, t_min, t_max)
+    end
+  end
 
-        if ray_in_bounds?(root, t_min, t_max),
-          do: build_record(root, ray, center, radius, material),
-          else: :miss
-      end
+  defp nearest_hit(near_root, far_root, ray, center, radius, material, t_min, t_max) do
+    cond do
+      ray_in_bounds?(near_root, t_min, t_max) ->
+        build_record(near_root, ray, center, radius, material)
+
+      ray_in_bounds?(far_root, t_min, t_max) ->
+        build_record(far_root, ray, center, radius, material)
+
+      true ->
+        :miss
     end
   end
 
