@@ -123,8 +123,7 @@ defmodule Exray.Vector do
         %Exray.Vector{x: 0.2672612419124244, y: 0.5345224838248488, z: 0.8017837257372732}
   """
   @spec normalize(t()) :: t()
-  def normalize(%Exray.Vector{x: 0, y: 0, z: 0}),
-    do: raise(ArithmeticError, message: "Cannot normalize a zero vector")
+  def normalize(%Exray.Vector{x: 0, y: 0, z: 0}), do: raise(ArithmeticError, message: "Cannot normalize a zero vector")
 
   def normalize(a) do
     %Exray.Vector{x: a.x / mod(a), y: a.y / mod(a), z: a.z / mod(a)}

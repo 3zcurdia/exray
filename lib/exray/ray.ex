@@ -2,9 +2,9 @@ defmodule Exray.Ray do
   @moduledoc """
     A ray in space
   """
-  defstruct [:origin, :direction]
-
   alias Exray.Vector
+
+  defstruct [:origin, :direction]
 
   @type t :: %__MODULE__{origin: Vector.t(), direction: Vector.t()}
 
@@ -15,8 +15,7 @@ defmodule Exray.Ray do
 
   @spec at(t(), number()) :: Vector.t()
   def at(%Exray.Ray{origin: origin, direction: direction}, t) do
-    origin
-    |> Vector.add(Vector.multiply(direction, t))
+    Vector.add(origin, Vector.multiply(direction, t))
   end
 
   @spec unit_vector(t()) :: Vector.t()
