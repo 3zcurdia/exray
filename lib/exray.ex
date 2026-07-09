@@ -2,13 +2,13 @@ defmodule Exray do
   @moduledoc """
   Documentation for `Exray`.
   """
-
-  alias Supervisor.Spec
-  alias Exray.PPM
   alias Exray.Color
-  alias Exray.Vector
+
+  # alias Supervisor.Spec
+  alias Exray.PPM
   alias Exray.Ray
   alias Exray.Sphere
+  alias Exray.Vector
 
   def render(width \\ 256, height \\ 256) do
     ppm = PPM.new(width, height)
@@ -46,9 +46,7 @@ defmodule Exray do
       |> Vector.subtract(Vector.divide(pixel_delta_u, 2))
       |> Vector.subtract(Vector.divide(pixel_delta_v, 2))
 
-    pixel00_loc =
-      viewport_upper_left
-      |> Vector.add(Vector.divide(Vector.add(pixel_delta_u, pixel_delta_v), 2))
+    pixel00_loc = Vector.add(viewport_upper_left, Vector.divide(Vector.add(pixel_delta_u, pixel_delta_v), 2))
 
     pixels =
       for j <- 0..(height - 1), i <- 0..(width - 1), into: [] do
@@ -65,17 +63,18 @@ defmodule Exray do
         "#{ray_color(ray)}\n"
       end
 
-    %PPM{ppm | pixels: pixels}
+    %{ppm | pixels: pixels}
   end
 
   def ray_color(ray) do
     if Sphere.hit?(Sphere.new({0.0, 0.0, -1.0}, 0.5), ray) do
-      Vector.new(1, 0, 0) |> Color.new()
+      1 |> Vector.new(0, 0) |> Color.new()
     else
       %{y: y} = Ray.unit_vector(ray)
       a = 0.5 * (y + 1.0)
 
-      Vector.new(1.0, 1.0, 1.0)
+      1.0
+      |> Vector.new(1.0, 1.0)
       |> Vector.multiply(1.0 - a)
       |> Vector.add(Vector.multiply(Vector.new(0.5, 0.7, 1.0), a))
       |> Color.new()

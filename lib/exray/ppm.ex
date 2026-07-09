@@ -30,6 +30,6 @@ end
 
 defimpl String.Chars, for: Exray.PPM do
   def to_string(%{width: width, height: height, pixels: pixels}) do
-    ["P3\n", "#{width} #{height}\n", "255\n" | pixels] |> Enum.join()
+    Enum.join(["P3\n", "#{width} #{height}\n", "255\n" | pixels])
   end
 end

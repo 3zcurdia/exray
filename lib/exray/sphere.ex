@@ -1,7 +1,8 @@
 defmodule Exray.Sphere do
-  defstruct [:center, :radius]
-
+  @moduledoc false
   alias Exray.Vector
+
+  defstruct [:center, :radius]
 
   @type t :: %__MODULE__{center: Vector.t(), radius: number()}
 
