@@ -3,7 +3,7 @@ defmodule Exray do
   Documentation for `Exray`.
   """
 
-  alias Supervisor.Spec
+  # alias Supervisor.Spec
   alias Exray.PPM
   alias Exray.Color
   alias Exray.Vector
