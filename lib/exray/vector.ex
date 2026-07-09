@@ -135,6 +135,98 @@ defmodule Exray.Vector do
   def unit(vector), do: normalize(vector)
 
   @doc """
+    Negates a vector.
+
+    ## Examples
+
+        iex> Exray.Vector.negate(%Exray.Vector{x: 1, y: -2, z: 3})
+        %Exray.Vector{x: -1, y: 2, z: -3}
+  """
+  @spec negate(t()) :: t()
+  def negate(a), do: %__MODULE__{x: -a.x, y: -a.y, z: -a.z}
+
+  @doc """
+    Random vector with components in `[0.0, 1.0)`.
+
+        iex> %Exray.Vector{x: x} = Exray.Vector.random()
+        iex> x >= 0.0 and x < 1.0
+        true
+  """
+  @spec random() :: t()
+  def random, do: random(0.0, 1.0)
+
+  @doc """
+    Random vector with components in `[min, max)`.
+
+        iex> %Exray.Vector{x: x} = Exray.Vector.random(-1.0, 1.0)
+        iex> x >= -1.0 and x < 1.0
+        true
+  """
+  @spec random(number(), number()) :: t()
+  def random(min, max) do
+    scale = max - min
+
+    %__MODULE__{
+      x: min + :rand.uniform() * scale,
+      y: min + :rand.uniform() * scale,
+      z: min + :rand.uniform() * scale
+    }
+  end
+
+  @doc """
+    Random vector uniformly distributed inside the unit sphere.
+
+        iex> v = Exray.Vector.random_in_unit_sphere()
+        iex> Exray.Vector.mod_sqr(v) < 1.0
+        true
+  """
+  @spec random_in_unit_sphere() :: t()
+  def random_in_unit_sphere, do: random_in_unit_sphere(random(-1.0, 1.0))
+
+  defp random_in_unit_sphere(v) do
+    if mod_sqr(v) < 1.0, do: v, else: random_in_unit_sphere(random(-1.0, 1.0))
+  end
+
+  @doc """
+    Random unit vector on the surface of the unit sphere (Lambertian sampling).
+
+        iex> v = Exray.Vector.random_unit_vector()
+        iex> Exray.Vector.mod(v) |> Kernel.>=(0.9999) and Exray.Vector.mod(v) |> Kernel.<=(1.0001)
+        true
+  """
+  @spec random_unit_vector() :: t()
+  def random_unit_vector, do: normalize(random_in_unit_sphere())
+
+  @doc """
+    Random vector within the same hemisphere as `normal`.
+
+        iex> n = %Exray.Vector{x: 0.0, y: 1.0, z: 0.0}
+        iex> v = Exray.Vector.random_in_hemisphere(n)
+        iex> Exray.Vector.dot(v, n) >= 0.0
+        true
+  """
+  @spec random_in_hemisphere(t()) :: t()
+  def random_in_hemisphere(normal) do
+    v = random_in_unit_sphere()
+    if dot(v, normal) > 0.0, do: v, else: negate(v)
+  end
+
+  @doc """
+    Random vector inside the unit disk in the xy plane (`z = 0`).
+
+        iex> v = Exray.Vector.random_in_unit_disk()
+        iex> v.z == 0.0 and Exray.Vector.mod_sqr(v) < 1.0
+        true
+  """
+  @spec random_in_unit_disk() :: t()
+  def random_in_unit_disk, do: random_in_unit_disk(random(-1.0, 1.0))
+
+  defp random_in_unit_disk(v) do
+    %__MODULE__{} = v = %{v | z: 0.0}
+    if mod_sqr(v) < 1.0, do: v, else: random_in_unit_disk(random(-1.0, 1.0))
+  end
+
+  @doc """
     It returns the module(length) of a vector
 
     ## Examples
