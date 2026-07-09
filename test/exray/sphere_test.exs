@@ -77,5 +77,16 @@ defmodule Exray.SphereTest do
 
       assert :miss = Hittable.hit(sphere, ray, 2.0, 2.9)
     end
+
+    test "uses the farther root when the nearer root is below t_min" do
+      sphere = Sphere.new(Vector.new(0, 0, 0), 1.0)
+      ray = Ray.new(Vector.new(0, 0, 0), Vector.new(0, 0, 1))
+
+      assert {:ok, %HitRecord{t: t, front_face: false, normal: %Vector{z: z}}} =
+               Hittable.hit(sphere, ray, 0.001, 1.0e12)
+
+      assert_in_delta t, 1.0, 1.0e-9
+      assert_in_delta z, -1.0, 1.0e-9
+    end
   end
 end
