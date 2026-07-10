@@ -6,8 +6,16 @@ defmodule Render do
   alias Exray.Sphere
   alias Exray.Vector
 
-  def run do
+  @default_width 400
+  @default_samples_per_pixel 50
+  @default_max_depth 50
+
+  def run(opts \\ []) do
     IO.puts("Rendering...")
+
+    image_width = opts[:image_width] || @default_width
+    samples_per_pixel = opts[:samples_per_pixel] || @default_samples_per_pixel
+    max_depth = opts[:max_depth] || @default_max_depth
 
     world = random_scene()
 
@@ -22,9 +30,9 @@ defmodule Render do
       )
 
     Exray.render(camera, world, "hello.ppm",
-      image_width: 400,
-      samples_per_pixel: 50,
-      max_depth: 50
+      image_width: image_width,
+      samples_per_pixel: samples_per_pixel,
+      max_depth: max_depth
     )
 
     IO.puts("\nDone.")
@@ -78,4 +86,24 @@ defmodule Render do
   end
 end
 
-Render.run()
+{parsed, _rest, invalid} =
+  OptionParser.parse(System.argv(),
+    strict: [width: :integer, samples_per_pixel: :integer, max_depth: :integer]
+  )
+
+unless invalid == [] do
+  IO.puts(:stderr, "Invalid arguments: #{inspect(invalid)}")
+
+  IO.puts(
+    :stderr,
+    "Usage: mix run render.exs [--width N] [--samples-per-pixel N] [--max-depth N]"
+  )
+
+  System.halt(1)
+end
+
+Render.run(
+  image_width: parsed[:width],
+  samples_per_pixel: parsed[:samples_per_pixel],
+  max_depth: parsed[:max_depth]
+)

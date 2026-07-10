@@ -51,3 +51,9 @@ notably (1028% → 892%): the same work gets done with ~13% less
 scheduler pressure. The gain is primarily better efficiency, not
 raw speed — the real payoff shows on large or non-square renders
 where per-line tail effects would otherwise leave cores idle.
+
+### New Baseline 1080x720 image
+
+```
+mix run render.exs --width 1080  694.61s user 18.70s system 1098% cpu 1:04.95 total
+```
