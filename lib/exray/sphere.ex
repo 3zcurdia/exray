@@ -26,6 +26,7 @@ defmodule Exray.Sphere do
 end
 
 defimpl Exray.Hittable, for: Exray.Sphere do
+  alias Exray.AABB
   alias Exray.HitRecord
   alias Exray.Ray
   alias Exray.Vector
@@ -33,6 +34,14 @@ defimpl Exray.Hittable, for: Exray.Sphere do
   @spec hit(Exray.Sphere.t(), Ray.t(), number(), number()) :: {:ok, HitRecord.t()} | :miss
   def hit(%Exray.Sphere{} = sphere, %Ray{} = ray, t_min, t_max) do
     solve_quadratic(sphere, ray, t_min, t_max)
+  end
+
+  @spec bounding_box(Exray.Sphere.t()) :: AABB.t()
+  def bounding_box(%Exray.Sphere{center: center, radius: radius}) do
+    AABB.new(
+      Vector.subtract(center, Vector.new(radius, radius, radius)),
+      Vector.add(center, Vector.new(radius, radius, radius))
+    )
   end
 
   defp solve_quadratic(%{center: center, radius: radius, material: material}, ray, t_min, t_max) do

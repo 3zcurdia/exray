@@ -89,4 +89,18 @@ defmodule Exray.SphereTest do
       assert_in_delta z, -1.0, 1.0e-9
     end
   end
+
+  describe "bounding_box/1" do
+    test "returns the axis-aligned box enclosing the sphere" do
+      sphere = Sphere.new(Vector.new(1, 2, 3), 0.5)
+      bbox = Hittable.bounding_box(sphere)
+
+      assert_in_delta bbox.min.x, 0.5, 1.0e-9
+      assert_in_delta bbox.min.y, 1.5, 1.0e-9
+      assert_in_delta bbox.min.z, 2.5, 1.0e-9
+      assert_in_delta bbox.max.x, 1.5, 1.0e-9
+      assert_in_delta bbox.max.y, 2.5, 1.0e-9
+      assert_in_delta bbox.max.z, 3.5, 1.0e-9
+    end
+  end
 end
