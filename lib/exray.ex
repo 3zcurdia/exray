@@ -42,14 +42,27 @@ defmodule Exray do
     IO.puts(:stderr, "Rendering #{width}x#{height}, #{spp} spp, max depth #{max_depth}")
 
     pixels =
-      for j <- (height - 1)..0//-1, i <- 0..(width - 1), into: [] do
-        IO.write(:stderr, "\rScanlines remaining: #{j + 1} ")
-        render_pixel(camera, world, i, j, width, height, spp, max_depth)
-      end
+      (height - 1)..0//-1
+      |> Task.async_stream(
+        &render_line(camera, world, width, height, spp, max_depth, &1),
+        ordered: true,
+        timeout: :infinity
+      )
+      |> Enum.with_index()
+      |> Enum.flat_map(fn {{:ok, line}, idx} ->
+        IO.write(:stderr, "\rScanlines remaining: #{height - idx - 1} ")
+        line
+      end)
 
-    IO.puts(:stderr, "\rDone.                  ")
+    IO.puts(:stderr, "\rDone")
 
     PPM.write(%{ppm | pixels: pixels}, filename)
+  end
+
+  defp render_line(camera, world, width, height, spp, max_depth, j) do
+    for i <- 0..(width - 1) do
+      render_pixel(camera, world, i, j, width, height, spp, max_depth)
+    end
   end
 
   @spec render_pixel(
