@@ -29,10 +29,13 @@ defmodule Render do
         focus_dist: 10.0
       )
 
+    nx = Keyword.get(opts, :nx, false)
+
     Exray.render(camera, world, "hello.ppm",
       image_width: image_width,
       samples_per_pixel: samples_per_pixel,
-      max_depth: max_depth
+      max_depth: max_depth,
+      nx: nx
     )
 
     IO.puts("\nDone.")
@@ -88,22 +91,23 @@ end
 
 {parsed, _rest, invalid} =
   OptionParser.parse(System.argv(),
-    strict: [width: :integer, samples_per_pixel: :integer, max_depth: :integer]
+    strict: [width: :integer, samples_per_pixel: :integer, max_depth: :integer, nx: :boolean]
   )
 
-unless invalid == [] do
-  IO.puts(:stderr, "Invalid arguments: #{inspect(invalid)}")
+  unless invalid == [] do
+    IO.puts(:stderr, "Invalid arguments: #{inspect(invalid)}")
 
-  IO.puts(
-    :stderr,
-    "Usage: mix run render.exs [--width N] [--samples-per-pixel N] [--max-depth N]"
+    IO.puts(
+      :stderr,
+      "Usage: mix run render.exs [--width N] [--samples-per-pixel N] [--max-depth N] [--nx]"
+    )
+
+    System.halt(1)
+  end
+
+  Render.run(
+    image_width: parsed[:width],
+    samples_per_pixel: parsed[:samples_per_pixel],
+    max_depth: parsed[:max_depth],
+    nx: parsed[:nx] || false
   )
-
-  System.halt(1)
-end
-
-Render.run(
-  image_width: parsed[:width],
-  samples_per_pixel: parsed[:samples_per_pixel],
-  max_depth: parsed[:max_depth]
-)

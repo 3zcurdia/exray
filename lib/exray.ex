@@ -11,6 +11,13 @@ defmodule Exray do
     results are reassembled into the row-major PPM output via an
     index-addressed Erlang `:array` buffer, so task completion order
     does not affect the final image.
+
+    Set the `:nx` option (or pass `--nx` to `render.exs`) to drop in an
+    [Nx](https://hex.pm/packages/nx) + [EXLA](https://hex.pm/packages/exla)
+    accelerated renderer that vectorizes the per-bounce ray-sphere
+    intersection over every active ray in a tile as a single tensor
+    batch. The non-Nx path (default) is unchanged and dependency-free at
+    runtime.
   """
 
   alias Exray.Camera
@@ -39,9 +46,19 @@ defmodule Exray do
       * `:tile_size` (default #{inspect(@tile_size)}) – side length in px of the
         square tiles used for parallelization. Smaller tiles balance load better
         on many cores; larger tiles reduce per-task overhead.
+      * `:nx` (default `false`) – when truthy, use the Nx/EXLA accelerated
+        renderer. See `Exray.Nx.Render`.
   """
   @spec render(Camera.t(), Hittable.t(), String.t(), keyword()) :: :ok
   def render(camera, world, filename \\ "hello.ppm", opts \\ []) do
+    if Keyword.get(opts, :nx, false) do
+      Exray.Nx.Render.render(camera, world, filename, opts)
+    else
+      render_scalar(camera, world, filename, opts)
+    end
+  end
+
+  defp render_scalar(camera, world, filename, opts) do
     spp = Keyword.get(opts, :samples_per_pixel, @samples_per_pixel)
     max_depth = Keyword.get(opts, :max_depth, @max_depth)
     image_width = Keyword.get(opts, :image_width, @image_width)

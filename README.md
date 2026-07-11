@@ -12,8 +12,17 @@ Lambertian, metal, and dielectric materials.
 mix deps.get
 ```
 
-The only dependency is [`dialyxir`](https://github.com/jeremyjh/dialyxir),
-used for dev/test type checking.
+Dev/test dependencies are [`dialyxir`](https://github.com/jeremyjh/dialyxir)
+(type checking), [`credo`](https://github.com/rrrene/credo) and
+[`styler`](https://github.com/Adzz/styler) (lint + format).
+
+The optional Nx accelerated path uses
+[`nx`](https://hex.pm/packages/nx) and
+[`exla`](https://hex.pm/packages/exla). They are listed as regular
+dependencies, so `mix deps.get` downloads them automatically. Building
+EXLA requires a C++ toolchain on the host; on first compile it downloads
+a pre-built XLA archive and compiles a small native extension. The
+default (non-Nx) render path runs without EXLA at runtime.
 
 ## Usage
 
@@ -24,6 +33,18 @@ random ones) and writes the output to `hello.ppm`:
 ```bash
 mix run render.exs
 ```
+
+To use the Nx + EXLA accelerated renderer, pass `--nx`:
+
+```bash
+mix run render.exs --nx
+```
+
+The Nx path vectorizes the per-bounce ray-sphere intersection across
+every active ray in a tile as a single tensor batch. It renders the same
+scene, with the same materials and depth-of-field camera, but with a
+linear (non-BVH) scan over all spheres; it scales well for scenes of a
+few hundred spheres and benefits from EXLA's CPU SIMD kernels.
 
 To render your own scene, build an `Exray.HittableList` of `Exray.Sphere`s
 and an `Exray.Camera`, then call `Exray.render/4`:
@@ -54,6 +75,8 @@ camera =
   )
 
 Exray.render(camera, world, "out.ppm", image_width: 400)
+# or, with the accelerated path:
+Exray.render(camera, world, "out.ppm", image_width: 400, nx: true)
 ```
 
 ### `Exray.render/4` options
@@ -63,6 +86,9 @@ Exray.render(camera, world, "out.ppm", image_width: 400)
 | `:image_width`      | `400`   | Output width in px; height follows aspect.   |
 | `:samples_per_pixel`| `100`   | Antialiasing samples per pixel.              |
 | `:max_depth`        | `50`    | Maximum ray-bounce depth.                    |
+| `:tile_size`        | `64`    | Side length (px) of square tiles for parallelism. |
+| `:nx`               | `false` | Use the Nx/EXLA accelerated renderer.        |
+| `:sample_batch`     | `16`    | (Nx only) samples processed per tensor batch per tile. Smaller batches keep peak memory low. |
 
 The output is a plain PPM file. Tools like
 [`magick`](https://imagemagick.org/) or
